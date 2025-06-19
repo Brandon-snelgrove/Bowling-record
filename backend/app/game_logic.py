@@ -1,17 +1,24 @@
 class BowlingGame:
   def __init__(self, rolls=None):
-    self.rolls = rolls or []
+    if rolls is None:
+      self.rolls = []
+    else:
+      try:
+        self.rolls = [int(r) for r in rolls.split(',') if r.strip().isdigit()]
+      except:
+        raise ValueError(f"Invalid roll data: {rolls}") from e
 
   def roll(self, pins):
     if pins < 0 or pins > 10:
       raise ValueError("Invalid pin count")
     self.rolls.append(pins)
 
-  def score(self):
+  def calculate_score(self):
     score = 0
     i = 0
 
     for frame in range(10):
+      # print(f"Frame {frame + 1}, Rolls: {self.rolls[i:i+3]}")
       if i >= len(self.rolls):
         break
       if self.rolls[i] == 10:
@@ -26,12 +33,10 @@ class BowlingGame:
         # open frame
         score += self.rolls[i] + (self.rolls[i+1] if i+1 < len(self.rolls) else 0)
         i += 2
+      # print(f"Score after frame {frame + 1}: {score}")
     return score
 
-    def _next_two(self, i):
-      return sum(self.rolls[i+1:i+3])
-
-    def get_frames(self):
+  def get_frames(self):
       frames = []
       i = 0
       for frame in range(10):
@@ -49,4 +54,9 @@ class BowlingGame:
       #Add final bonus rolls if they exist
       if len(frames) == 10 and i < len(self.rolls):
         frames[-1].extend(self.rolls[i:])
-      return frames
+      return frames  
+      
+
+  def _next_two(self, i):
+    # Safely calculate the sum of the next two rolls
+    return sum(self.rolls[i + 1:i + 3])
