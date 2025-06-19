@@ -1,11 +1,12 @@
 from fastapi import HTTPException, FastAPI, Body
-from sqlmodel import SQLModel, Session, create_engine
+from sqlmodel import SQLModel, Session
 from .models import Game
 from .game_logic import BowlingGame
 from .llm import summarize_score #if using LLM
+from sqlalchemy import create_engine
 
 app = FastAPI()
-engine = create_engine("sqlite:///game.db")
+engine = create_engine("sqlite:///backend/app/database.db")
 SQLModel.metadata.create_all(engine)
 
 @app.post("/games")
@@ -54,7 +55,7 @@ def summary(game_id: str):
       raise HTTPException(status_code=404, detail="Game not found")
     logic = BowlingGame(game.get_rolls())
     frames = logic.get_frames()
-    score = logic.score()
+    score = logic.calculate_score()
     summary = summarize_score(frames, score)
     return {
       "summary": summary

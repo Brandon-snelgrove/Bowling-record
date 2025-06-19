@@ -3,10 +3,16 @@ class BowlingGame:
     if rolls is None:
       self.rolls = []
     else:
-      try:
+      # try:
+      #   self.rolls = [int(r) for r in rolls.split(',') if r.strip().isdigit()]
+      # except Exception as e:
+      #   raise ValueError(f"Invalid roll data: {rolls}") from e
+      if isinstance(rolls, str):
         self.rolls = [int(r) for r in rolls.split(',') if r.strip().isdigit()]
-      except:
-        raise ValueError(f"Invalid roll data: {rolls}") from e
+      elif isinstance(rolls, list):
+        self.rolls = [int(r) for r in rolls]
+      else:
+        raise ValueError("Rolls must be a comma-separated string or a list of intergers")
 
   def roll(self, pins):
     if pins < 0 or pins > 10:
