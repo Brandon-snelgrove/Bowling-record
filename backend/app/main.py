@@ -1,4 +1,5 @@
 from fastapi import HTTPException, FastAPI, Body
+from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel, Session
 from .models import Game
 from .game_logic import BowlingGame
@@ -6,7 +7,19 @@ from .llm import summarize_score, format_frames_for_prompt#if using LLM
 from sqlalchemy import create_engine
 
 app = FastAPI()
-engine = create_engine("sqlite:///backend/app/database.db")
+
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=["http://localhost:3000"],
+  allow_credentials=True,
+  allow_methods=["*"],
+  allow_headers=["*"],
+)
+
+engine = create_engine(
+  "sqlite:///backend/app/database.db",
+  connect_args={"check_same_thread": False}
+  )
 SQLModel.metadata.create_all(engine)
 
 @app.post("/games")
