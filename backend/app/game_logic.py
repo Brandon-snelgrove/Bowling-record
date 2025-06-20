@@ -43,24 +43,42 @@ class BowlingGame:
     return score
 
   def get_frames(self):
-      frames = []
+      summaries = []
+      score = 0
       i = 0
+
       for frame in range(10):
         if i >= len(self.rolls):
           break
-        if self.rolls[i] == 10:
-          frames.append([10])
+
+        if self.rolls[i] == 10: #strike
+          frame_score = 10 + self._next_two(i)
+          summaries.append((frame + 1, [10], score + frame_score))
+          score += frame_score
           i += 1 
-        elif i+1 < len(self.rolls):
-          frames.append(self.rolls[i:i+2])
+        elif i+1 < len(self.rolls): #spare or open frame
+          roll_pair= self.rolls[i:i+2]
+          frame_score = sum(roll_pair)
+          if frame_score == 10: #spare
+            frame_score += self.rolls[i+2] if i+2 < len(self.rolls) else 0
+          summaries.append((frame + 1, roll_pair, score + frame_score))
+          score += frame_score
           i += 2
-        else:
-          frames.append([self.rolls[i]])
+        else: #incomplete frame
+          summaries.append((frame + 1, [self.rolls[i]], score + self.rolls[i]))
+          score += self.rolls[i]
           i += 1
       #Add final bonus rolls if they exist
-      if len(frames) == 10 and i < len(self.rolls):
-        frames[-1].extend(self.rolls[i:])
-      return frames  
+      if len(summaries) == 10 and i < len(self.rolls):
+        bonus_rolls = self.rolls[i:]
+        #safely extend rolls and recalculate final score
+        last_frame_num, last_frame_rolls, last_score = summaries[-1]
+        new_rolls = last_frame_rolls + bonus_rolls
+        bonus_points = sum(bonus_rolls)
+        new_score = last_score + bonus_points
+        summaries[-1] = (last_frame_num, new_rolls, new_score)
+     
+      return summaries  
       
 
   def _next_two(self, i):

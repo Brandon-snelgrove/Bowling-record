@@ -2,7 +2,7 @@ from fastapi import HTTPException, FastAPI, Body
 from sqlmodel import SQLModel, Session
 from .models import Game
 from .game_logic import BowlingGame
-from .llm import summarize_score #if using LLM
+from .llm import summarize_score, format_frames_for_prompt#if using LLM
 from sqlalchemy import create_engine
 
 app = FastAPI()
@@ -60,3 +60,4 @@ def summary(game_id: str):
     return {
       "summary": summary
     }
+    # print(format_frames_for_prompt(frames, score))
