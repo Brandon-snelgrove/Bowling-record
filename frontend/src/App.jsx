@@ -40,7 +40,7 @@ function App() {
     <div className="app">
       {!gameStarted ? (
         <div className="form-container">
-          <h1>Create Bowling Game</h1>
+          <h2>Create Bowling Game</h2>
           <input
             type="text"
             placeholder="Enter your name"

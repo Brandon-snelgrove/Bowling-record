@@ -1,0 +1,88 @@
+.bowling-board {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.frame-row {
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Frame */
+.frame {
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid #000;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  width: 70px; /* slightly larger */
+  box-sizing: border-box;
+  font-size: 18px;
+}
+
+.frame:first-child {
+  border-left: 2px solid #000;
+}
+
+.last-frame {
+  width: 100px;
+  border-right: 2px solid #000;
+}
+
+/* Rolls */
+.frame .rolls {
+  display: flex;
+  height: 36px; /* slightly taller */
+}
+
+.frame .roll {
+  flex: 1;
+  border-right: 1px solid #000;
+  text-align: center;
+  font-weight: bold;
+  line-height: 36px;
+  box-sizing: border-box;
+}
+
+.frame .roll:last-child {
+  border-right: none;
+}
+
+/* Score cell */
+.frame .score {
+  height: 36px;
+  text-align: center;
+  line-height: 36px;
+  font-size: 16px;
+  border-top: 2px solid #000;
+}
+
+/* Last frame rolls */
+.last-frame .rolls .roll {
+  width: 33.33%;
+  border-right: 1px solid #000;
+}
+
+.last-frame .rolls .roll:last-child {
+  border-right: none;
+}
+
+/* Total score */
+.total-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 72px;
+  width: 90px;
+  font-size: 18px;
+  font-weight: bold;
+  border: 2px solid #000;
+  background-color: #f4f4f4;
+  box-sizing: border-box;
+
+  /* Remove margin so it's flush with 10th frame */
+  margin-left: 0;
+}
