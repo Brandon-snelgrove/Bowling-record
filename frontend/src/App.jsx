@@ -50,7 +50,7 @@ function App() {
           <button onClick={startGame}>Create Game</button>
         </div>
       ) : (
-        <BowlingGamePage gameId={gameId} playerName={playerName} />
+        <BowlingGamePage gameId={gameId} setGameId={setGameId} playerName={playerName} />
       )}
     </div>
   );

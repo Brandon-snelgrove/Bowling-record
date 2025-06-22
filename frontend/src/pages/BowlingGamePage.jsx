@@ -2,7 +2,7 @@ import React, { useState, useEffect} from 'react';
 // import BowlingScoreTable from '../components/BowlingScoreTable';
 import Scorecard from '../components';
 
-export default function BowlingGamePage({ gameId, playerName }) {
+export default function BowlingGamePage({ gameId, setGameId, playerName }) {
   console.log('Game ID:', gameId);
   const [frameFirstRoll, setFrameFirstRoll] = useState(null);
   const [rolls, setRolls] = useState([]);
@@ -11,6 +11,9 @@ export default function BowlingGamePage({ gameId, playerName }) {
   const [summary, setSummary] = useState('');
   const [frames, setFrames] = useState([]);
   const [cumulativeScores, setCumulativeScores] = useState([]);
+  const [loadingSummary, setLoadingSummary] = useState(false);
+  
+
 
   useEffect(() => {
     const newFrames = convertToFrames(rolls);
@@ -265,6 +268,7 @@ export default function BowlingGamePage({ gameId, playerName }) {
   }
 
   const fetchSummary = async () => {
+    setLoadingSummary(true); // Start loading
     try {
       const res = await fetch(`http://localhost:8000/games/${gameId}/summary`);
       const data = await res.json();
@@ -272,8 +276,40 @@ export default function BowlingGamePage({ gameId, playerName }) {
     } catch (error) {
       console.error('Error fetching summary:', error);
       setMessage('Failed to fetch summary.');
+    } finally {
+      setLoadingSummary(false); // Stop loading
     }
-  }
+  };
+  
+
+  const restartGame = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/games', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to start a new game');
+      }
+  
+      const data = await response.json();
+      setRolls([]);
+      setScore(null);
+      setMessage('');
+      setSummary('');
+      setFrames([]);
+      setCumulativeScores([]);
+      setFrameFirstRoll(null);
+      setGameId(data.game_id);
+    } catch (error) {
+      console.error('Error restarting game:', error);
+      setMessage('Failed to restart game.');
+    }
+  };
+
 
   return (
     <div className="bowling-game-page">
@@ -363,9 +399,30 @@ export default function BowlingGamePage({ gameId, playerName }) {
 
 
       </div>
-      <p>{message}</p>
-      <button className='summary-button' onClick={fetchSummary}>Show Summary</button>
-      {summary && <p className='summary-text' style={{ marginTop: '1rem' }}>{summary}</p>}
+      <button
+        className="summary-button"
+        onClick={restartGame}
+      >
+        Restart Game
+      </button>
+      <div style={{ minHeight: '2rem', textAlign: 'center', marginBottom: '0.5rem' }}>
+        <p style={{ margin: 0 }}>{message}</p>
+      </div>
+
+      <button
+        className={`summary-button ${loadingSummary ? 'loading' : ''}`}
+        onClick={fetchSummary}
+        disabled={loadingSummary}
+      >
+        {loadingSummary ? 'Loading...' : 'Show Summary'}
+      </button>
+
+      <div style={{ minHeight: '100px', marginTop: '1rem' }}>
+        {summary && (
+          <p className='summary-text'>{summary}</p>
+        )}
+      </div>
+
     </div>
   );
 }

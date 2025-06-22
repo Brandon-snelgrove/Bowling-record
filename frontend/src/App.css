@@ -7,14 +7,16 @@ body {
 h1 {
   text-align: center;
   /* margin-bottom: 1rem; */
-  font-size: 80px;
+  font-size: 70px;
   margin: 0.5rem 0.5rem;
 }
+
 .app {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  flex-direction: column; /* Stack content vertically */
+  align-items: center;     /* Center horizontally */
+  padding-top: 20px;       /* Add a bit of top spacing */
+  min-height: 100vh;       /* Full height to avoid jumping */
 }
 
 .form-container {
@@ -24,7 +26,10 @@ h1 {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   width: 300px;
   text-align: center;
+
+  margin-top: 80px; /* 👈 Add this line */
 }
+
 
 input[type="text"],
 button {
@@ -112,4 +117,35 @@ button:hover {
   background-color: #ccc;
   color: #666;
   cursor: not-allowed;
+}
+.summary-button.restart {
+  background-color: #dc3545;
+}
+
+.summary-button.restart:hover {
+  background-color: #c82333;
+}
+
+.summary-button.loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.summary-button.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 90%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border: 2px solid white;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
