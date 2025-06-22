@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 engine = create_engine(
-  "sqlite:///backend/app/database.db",
+  "sqlite:///app/database.db",
   connect_args={"check_same_thread": False})
 SQLModel.metadata.create_all(engine)
 
